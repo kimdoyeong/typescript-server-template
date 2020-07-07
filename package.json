@@ -4,5 +4,20 @@
   "main": "index.js",
   "author": "Doyeong Kim <48087967+kimdoyeong@users.noreply.github.com>",
   "license": "MIT",
-  "private": "true"
+  "private": "true",
+  "dependencies": {
+    "@types/express": "^4.17.7",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.9.6"
+  },
+  "scripts": {
+    "start": "ts-node -r tsconfig-paths/register src",
+    "start:watch": "nodemon --ext ts --exec ts-node -r tsconfig-paths/register src",
+    "build": "tsc"
+  }
 }
