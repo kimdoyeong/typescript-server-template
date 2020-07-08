@@ -1,18 +1,17 @@
 import Router from "@packages/utils/Router";
-import { Response } from "express";
+import { Response, Request } from "express";
 import App from "app";
 
 class testRouter extends Router {
   constructor() {
     super();
-
-    this.router.get("/", this.getDate);
+    this.router.get("/", this.getDate.bind(this));
   }
-
-  private getDate(_: any, res: Response) {
-    res.json({
-      time: new Date().getTime(),
-    });
+  @Router.routes
+  async getDate(req: Request, res: Response) {
+    return {
+      data: new Date().getDate(),
+    };
   }
 }
 
