@@ -2,6 +2,10 @@ import Router from "@packages/utils/Router";
 import { Response, Request } from "express";
 import App from "app";
 
+/*
+  This is a example router.
+  If you want to delete this file, Please remove import that pointing this file in 'routes/index.ts'.
+*/
 class testRouter extends Router {
   constructor() {
     super();
