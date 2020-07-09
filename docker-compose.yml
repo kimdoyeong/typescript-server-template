@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    command: yarn start:watch
+    volumes:
+      - .:/usr/app
+    ports:
+      - 4000:4000
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: ts-template
+    volumes:
+      - db
+    logging:
+      driver: none
+  mongo-express:
+    image: mongo-express
+    logging:
+      driver: none
+    links:
+      - mongo
+    ports:
+      - 8080:8080
+volumes:
+  db:
