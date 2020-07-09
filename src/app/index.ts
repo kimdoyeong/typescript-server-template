@@ -1,7 +1,9 @@
 import express from "express";
+import cors from "cors";
 import errorMiddleware from "@packages/utils/middlewares/error";
 import Router from "@packages/utils/Router";
 import notFoundMiddleware from "@packages/utils/middlewares/notFound";
+import settings from "./settings";
 
 class App {
   private port: number;
@@ -10,6 +12,13 @@ class App {
 
   constructor(port: number) {
     this.port = port;
+
+    if (settings.cors)
+      this.app.use(
+        cors({
+          origin: settings.cors,
+        })
+      );
     this.app.use(App.rootRouter);
     this.app.use(notFoundMiddleware);
     this.app.use(errorMiddleware);
