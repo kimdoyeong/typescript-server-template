@@ -38,7 +38,7 @@ class brandNewRouter extends Router {
   }
 
   @Router.routes
-  getTime(req: Request, res: Response) {
+  async getTime(req: Request, res: Response) {
     return {
       status: 200,
       data: new Date().getTime(),
@@ -57,7 +57,7 @@ import "./testRouter.ts";
 
 `@Router.routes` Decorator can help you to make asyncnorized request handler. If you remove this decorator, Server can't catch and show you formatted error response.
 
-`modelHandler` helps reduce your code to CRUD responses. Check out this code (`src/routes/testRouter.ts`)
+`modelRouter` helps reduce your code to CRUD responses. Check out this code (`src/routes/testRouter.ts`)
 
 ```typescript
 import Router from "@packages/utils/Router";
