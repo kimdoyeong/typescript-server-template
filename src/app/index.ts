@@ -9,6 +9,7 @@ import notFoundMiddleware from "@packages/utils/middlewares/notFound";
 import settings from "./settings";
 import environments from "./environments";
 import Logger from "@packages/utils/logger";
+import bodyParser from "body-parser";
 
 class App {
   private port: number;
@@ -44,6 +45,7 @@ class App {
     this.app.use(
       morgan(environments.NODE_ENV === "development" ? "dev" : "common")
     );
+    this.app.use(bodyParser({ extended: true }));
     this.app.use(App.rootRouter);
     this.app.use(notFoundMiddleware);
     this.app.use(errorMiddleware);
