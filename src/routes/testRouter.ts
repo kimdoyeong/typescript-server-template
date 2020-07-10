@@ -13,7 +13,27 @@ class testRouter extends Router {
     super();
 
     this.modelRouter = new ModelRouter(User);
+    this.router.get("/user", this.modelRouter.getMany());
+    this.router.get(
+      "/user/:username",
+      this.modelRouter.getOne({
+        conditions: (req) => ({ username: req.params.username }),
+        projection: ["username"],
+      })
+    );
     this.router.post("/user", this.modelRouter.create());
+    this.router.put(
+      "/user/:username",
+      this.modelRouter.update({
+        conditions: (req) => ({ username: req.params.username }),
+      })
+    );
+    this.router.delete(
+      "/user/:username",
+      this.modelRouter.delete({
+        conditions: (req) => ({ username: req.params.username }),
+      })
+    );
   }
 }
 

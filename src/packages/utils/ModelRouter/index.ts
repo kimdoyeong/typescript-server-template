@@ -1,4 +1,11 @@
-import { Model, Document, MongooseFilterQuery, CreateQuery } from "mongoose";
+import {
+  Model,
+  Document,
+  MongooseFilterQuery,
+  CreateQuery,
+  Mongoose,
+  MongooseUpdateQuery,
+} from "mongoose";
 import { Request, Response, RequestHandler } from "express";
 import { ServerError } from "@packages/error";
 import Router from "../Router";
@@ -26,7 +33,10 @@ class ModelRouter<T extends Document> {
     NotFoundError,
   }: Partial<GetOptions<T>> = {}) {
     return Router.createRequestHandler(async (req, res) => {
-      const data = await this.model.findOne(conditions, projection);
+      const data = await this.model.findOne(
+        conditions && conditions(req),
+        projection
+      );
       if (!data) throw NotFoundError || this.NotFoundError;
       const response = onResponse ? onResponse(data) : data.toObject();
 
@@ -62,6 +72,88 @@ class ModelRouter<T extends Document> {
       }
     });
   }
+  getMany({
+    conditions,
+    projection,
+    onError,
+    onResponse,
+  }: Partial<GetManyOptions<T>> = {}) {
+    return Router.createRequestHandler(async (req, res) => {
+      try {
+        const data = await this.model.find(
+          (conditions && conditions(req)) || {},
+          projection
+        );
+        const response = onResponse ? onResponse(data) : data;
+
+        return {
+          status: 200,
+          data: response,
+        };
+      } catch (e) {
+        if (onError) onError(e);
+        else this.handleError(e);
+      }
+    });
+  }
+  update({
+    conditions,
+    queryValidate,
+    onResponse,
+    onError,
+    setUpdateQuery,
+    mode = "one",
+  }: Partial<UpdateOptions<T>> = {}) {
+    return Router.createRequestHandler(async (req, res) => {
+      try {
+        const query = setUpdateQuery
+          ? setUpdateQuery(req)
+          : req.method.toLowerCase() !== "get"
+          ? req.body
+          : req.query;
+        queryValidate && queryValidate(query);
+
+        const condition = (conditions && conditions(req)) || {};
+        const data = await this.model[mode === "one" ? "updateOne" : "update"](
+          condition,
+          query
+        );
+        const response = onResponse ? onResponse(data) : { success: true };
+
+        return {
+          status: 200,
+          data: response,
+        };
+      } catch (e) {
+        if (onError) onError(e);
+        else this.handleError(e);
+      }
+    });
+  }
+  delete({
+    conditions,
+    onResponse,
+    onError,
+    mode = "one",
+  }: Partial<DeleteOptions<T>> = {}) {
+    return Router.createRequestHandler(async (req, res) => {
+      try {
+        const condition = (conditions && conditions(req)) || {};
+        const data = await this.model[
+          mode === "one" ? "deleteOne" : "deleteMany"
+        ](condition);
+        const response = (onResponse && onResponse(data)) || { success: true };
+
+        return {
+          status: 200,
+          data: response,
+        };
+      } catch (e) {
+        if (onError) onError(e);
+        else this.handleError(e);
+      }
+    });
+  }
   private handleError(e: any) {
     Logger.error(e);
     if (e.name === "ValidationError") {
@@ -89,16 +181,39 @@ class ModelRouter<T extends Document> {
 }
 
 interface Options<T extends Document> {
-  onResponse(data: T): object;
+  onResponse(data: T | T[]): object;
   onError(error: any): void;
 }
 interface GetOptions<T extends Document> extends Options<T> {
-  conditions: MongooseFilterQuery<T>;
+  conditions(req: Request): MongooseFilterQuery<T>;
   projection: any;
   NotFoundError: ServerError;
+}
+interface GetManyOptions<T extends Document> extends Options<T> {
+  conditions(req: Request): MongooseFilterQuery<T>;
+  projection: any;
 }
 interface CreateOptions<T extends Document> extends Options<T> {
   setCreateQuery(req: Request): CreateQuery<T> | CreateQuery<T>[];
   queryValidate(query: CreateQuery<T> | CreateQuery<T>[]): void;
+}
+interface UpdateOptions<T extends Document> extends Options<T> {
+  conditions(req: Request): MongooseFilterQuery<T>;
+  setUpdateQuery(req: Request): MongooseUpdateQuery<T>;
+  queryValidate(query: MongooseUpdateQuery<T>): void;
+  mode: "one" | "many";
+}
+interface DeleteOptions<T extends Document> {
+  conditions: (req: Request) => MongooseFilterQuery<T>;
+  mode: "one" | "many";
+  onError(error: any): void;
+  onResponse(
+    data: {
+      ok?: number | undefined;
+      n?: number | undefined;
+    } & {
+      deletedCount?: number | undefined;
+    }
+  ): object;
 }
 export default ModelRouter;
