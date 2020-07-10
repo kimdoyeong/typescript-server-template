@@ -21,10 +21,12 @@
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "webpack": "^4.43.0"
   },
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register src",
+    "start": "node -r tsconfig-paths/register build",
+    "start:dev": "ts-node -r tsconfig-paths/register src",
     "start:watch": "nodemon --ext ts --exec ts-node -r tsconfig-paths/register src",
     "build": "tsc"
   }
