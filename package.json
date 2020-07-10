@@ -18,16 +18,20 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "babel-plugin-module-resolver": "^4.0.0",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.6",
-    "webpack": "^4.43.0"
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "start": "node -r tsconfig-paths/register build",
     "start:dev": "ts-node -r tsconfig-paths/register src",
     "start:watch": "nodemon --ext ts --exec ts-node -r tsconfig-paths/register src",
-    "build": "tsc"
+    "build": "babel src --extensions \".ts\" --out-dir build --copy-files"
   }
 }
