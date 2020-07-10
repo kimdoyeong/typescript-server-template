@@ -2,12 +2,23 @@
 
 This is a template that combined with Typescript, Express, Mongoose, and many utils to use easlier this template.
 
-## How to Start
+## Getting Started
 
 To start project from this template, use github template or run this command:
 
 ```
 git clone -depth 1 https://github.com/kimdoyeong/typescript-server-template [Project name]
+```
+
+To run this command, you can start server.
+
+```
+npm run start:dev
+yarn start:dev
+
+# Watch mode
+npm run start:watch
+yarn start:watch
 ```
 
 ## Usage
