@@ -10,6 +10,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     set(v: string) {
+      (this as any).encryptKey = crypto.randomBytes(64).toString("base64");
       const { encryptKey } = this as any;
       return crypto
         .pbkdf2Sync(v, encryptKey, 100000, 64, "sha512")
@@ -18,13 +19,10 @@ const userSchema = new Schema({
   },
   encryptKey: {
     type: String,
-    default() {
-      return crypto.randomBytes(64).toString("base64");
-    },
   },
 });
 
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
   username: string;
   password: string;
   encryptKey: string;
