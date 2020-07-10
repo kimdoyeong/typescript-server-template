@@ -93,4 +93,4 @@ App.registerRouter("/", new testRouter());
 
 # Issues
 
-Have a issue? Please report me via github issue tracker or `hello@doyeong.dev`. It is be welcomed to report me a issue like bugs, syntax error, or fix my poor english expression.
+Have a issue? Please report me via github issue tracker or `hello@doyeong.dev`. It will be welcomed to report me a issue like bugs, syntax error, or fix my poor english expression.
