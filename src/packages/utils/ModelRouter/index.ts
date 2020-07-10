@@ -75,6 +75,15 @@ class ModelRouter<T extends Document> {
 
       throw new ServerError(400, "VALIDATION_ERROR", messages);
     }
+    if (e.name === "MongoError" && e.code === 11000) {
+      const keys = Object.keys(e.keyValue);
+
+      throw new ServerError(
+        409,
+        "CONFLICT",
+        `이미 존재하는 ${keys.join(", ")}입니다.`
+      );
+    }
     throw e;
   }
 }
