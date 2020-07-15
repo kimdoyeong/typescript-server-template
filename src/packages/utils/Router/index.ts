@@ -12,7 +12,7 @@ class Router {
     const requestHandler = descriptor.value;
     if (!requestHandler) return;
 
-    (descriptor.value as any) = this.createRequestHandler(requestHandler);
+    (descriptor.value as any) = Router.createRequestHandler(requestHandler);
   }
   public static createRequestHandler(
     handler: (req: Request, res: Response, next: NextFunction) => any
