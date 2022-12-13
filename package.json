@@ -12,7 +12,7 @@
     "@types/morgan": "^1.9.1",
     "chalk": "^4.1.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mongoose": "^5.9.22",
     "morgan": "^1.10.0",
     "winston": "^3.3.3"
